@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Books</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Autores</th>
+      <th>Rate</th>
+      <th>Reviews</th>
+      <% if user_signed_in? %>
+        <th>Estantes</th>
+      <% end %>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @books.each do |book| %>
+      <tr>
+        <td><%= book.title %></td>
+        <td>
+           <%= book.authors %>
+        </td>
+        <td>
+           <%= get_book_rate(book.isbn) %>
+        </td>
+        <td>
+          <%= link_to 'Ver reviews', book_reviewings_path(book.isbn) %>
+        </td>
+        <% if user_signed_in? %>
+          <td>
+            <% if book_already_in_shelf(book.isbn) %>
+              <%= get_shelf_of_book(book.isbn) %>
+            <% else %>
+              <%= form_tag books_path(book_isbn: book.isbn) do %>
+                <%= select_tag :shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
+                <%= submit_tag 'Agregar' %>
+              <% end %>            
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

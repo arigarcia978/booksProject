@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <title>ProyectoLibros</title>
+	  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+	  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+	  <%= csrf_meta_tags %>
+	</head>
+	<body>
+		<p class="notice"><%= notice %></p>
+		<p class="alert"><%= alert %></p>
+		<div class = 'navbar'>
+			<%= form_tag books_path, :method => 'get' do %>
+				<%= text_field_tag :search_key %>
+				<%= submit_tag "Search", :name => nil %>
+				
+				<% if user_signed_in? %>
+					<%= current_user.email %>
+					<%= link_to 'Cerrar sesión', destroy_user_session_path, method: :delete %>
+				<% else %>
+					<%= link_to 'Iniciar sesión', new_user_session_path %>
+				<% end %>
+			<% end %>
+		</div>
+		
+		<%= yield %>
+
+	</body>
+</html>

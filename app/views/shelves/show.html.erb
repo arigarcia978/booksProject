@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @shelf.user.email %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @shelf.name %>
+</p>
+
+<strong>Books in edit_shelf_path:</strong>
+<% if @shelf.books %>
+	<% @shelf.books.each do |book| %>
+	    <ul>
+	        <li><%= book.isbn %></li>
+	        <li>
+		        <%= form_tag move_book_shelf_book_path(@shelf, book), method: "get" do |f| %>
+		        	<%= select_tag :to_shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
+					<%= submit_tag 'Move to' %>
+				<% end %>
+			</li>
+			<li><%= link_to 'Remove from shelf', remove_book_shelf_book_path(@shelf, book) %></li>
+	    </ul>
+	<% end %>
+<% end %>
+
+<%= link_to 'Edit', edit_shelf_path(@shelf) %> |
+<%= link_to 'Back', shelves_path %>

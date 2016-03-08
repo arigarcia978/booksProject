@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Reviewings</h1>
+
+<% if @reviewings && !@reviewings.empty? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Book</th>
+        <th>User</th>
+        <th>Rate</th>
+        <th>Review</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @reviewings.each do |reviewing| %>
+        <tr>
+          <td><%= reviewing.book %></td>
+          <td><%= reviewing.user.email %></td>
+          <td><%= reviewing.rate %></td>
+          <td><%= reviewing.review %></td>
+          <% if review_by_user(reviewing.id) %>
+            <td><%= link_to 'Edit', edit_reviewing_path(reviewing, book_id: reviewing.book.id) %></td>
+            <td><%= link_to 'Destroy', reviewing, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No reviews about this book.</p>
+<% end %>
+
+<% if user_reviewed_book(params[:book_id]) %>
+  <%= link_to 'New', books_path(book_isbn: params[:book_id]), method: 'post' %>
+<% end %>
+<br>
+
