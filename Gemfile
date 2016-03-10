@@ -48,4 +48,5 @@ end
 gem 'devise'
 gem 'googlebooks'
 gem 'materialize-sass'
+gem 'haml-rails'
 

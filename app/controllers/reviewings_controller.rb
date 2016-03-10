@@ -33,7 +33,7 @@ class ReviewingsController < ApplicationController
     @book = @reviewing.book
     @user = User.find(current_user.id)
     @user.reviewings << @reviewing
-    @book.updateRate(@book.id, @reviewing.rate)
+    @book.updateRate(@book.id)
 
     respond_to do |format|
       if @reviewing.save
@@ -49,8 +49,11 @@ class ReviewingsController < ApplicationController
   # PATCH/PUT /reviewings/1
   # PATCH/PUT /reviewings/1.json
   def update
+    @book = @reviewing.book
+    
     respond_to do |format|
       if @reviewing.update(reviewing_params)
+        @book.updateRate(@book.id)
         format.html { redirect_to book_reviewings_path(@reviewing.book.isbn), notice: 'Reviewing was successfully updated.' }
         format.json { render :show, status: :ok, location: @reviewing }
       else
@@ -63,8 +66,11 @@ class ReviewingsController < ApplicationController
   # DELETE /reviewings/1
   # DELETE /reviewings/1.json
   def destroy
+    @book = @reviewing.book
+    
     @reviewing.destroy
     respond_to do |format|
+      @book.updateRate(@book.id)
       format.html { redirect_to reviewings_url, notice: 'Reviewing was successfully destroyed.' }
       format.json { head :no_content }
     end

@@ -1,49 +1,72 @@
-<p id="notice"><%= notice %></p>
+<p class="notice" id = "notice"><% notice %></p>
 
-<h1>Listing Books</h1>
+<h4> Search results: <%= params[:search_key] %> </h4>
 
-<table>
-  <thead>
-    <tr>
-      <th>Título</th>
-      <th>Autores</th>
-      <th>Rate</th>
-      <th>Reviews</th>
-      <% if user_signed_in? %>
-        <th>Estantes</th>
-      <% end %>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<% @count = 0 %>
+<% @books.each do |book| %>
 
-  <tbody>
-    <% @books.each do |book| %>
-      <tr>
-        <td><%= book.title %></td>
-        <td>
-           <%= book.authors %>
-        </td>
-        <td>
-           <%= get_book_rate(book.isbn) %>
-        </td>
-        <td>
-          <%= link_to 'Ver reviews', book_reviewings_path(book.isbn) %>
-        </td>
-        <% if user_signed_in? %>
-          <td>
-            <% if book_already_in_shelf(book.isbn) %>
-              <%= get_shelf_of_book(book.isbn) %>
-            <% else %>
-              <%= form_tag books_path(book_isbn: book.isbn) do %>
-                <%= select_tag :shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
-                <%= submit_tag 'Agregar' %>
-              <% end %>            
-            <% end %>
-          </td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+   <% @count = 0 if @count == 4 %>
 
-<br>
+   <% if @count == 0 %>
+      <div class="row">
+   <% end %>
+
+   <div class="col s12 m3 book-container">
+      <div class="book-information valign-wrapper">
+         <div class="contenido valign center">
+            <span class="title"><b><%= book.title %></b></span> <br>
+            <img src= <%= book.image_link %> alt="" class = "center">
+            <p><i> <%= book.authors %> </i></p>
+            <p>Rate: <%= get_book_rate(book.isbn) %></p>
+         </div>
+      </div>
+      <div class="book-actions">
+         <% if book_already_in_shelf(book.isbn) || !user_signed_in? %>
+            <div class="options-icon col m6 center">
+         <% else %>
+            <div class="options-icon col m4 center">
+               <%= link_to '<i class="material-icons">library_add</i>'.html_safe, books_path(book_isbn: book.isbn), method: :post, :class => 'waves-effect waves-teal' %>
+            </div>
+            <div class="options-icon col m4 center">
+         <% end %>
+            <%= link_to '<i class="material-icons">chat_bubble</i>'.html_safe, book_reviewings_path(book.isbn), :class => 'waves-effect waves-teal' %>
+         </div>
+         <% if book_already_in_shelf(book.isbn) %>
+            <div class="options-icon col m6 center">
+         <% else %>
+            <div class="options-icon col m4 center">
+         <% end %>
+            <a class='waves-effect waves-teal modal-trigger' href= <%="#book-description#{book.isbn}" %> data-activates=''>
+               <i class="material-icons">add</i>
+            </a>
+         </div>
+      </div>
+   </div>
+
+   <% @count += 1 %>
+
+   <% if @count == 4 %>
+      </div>
+   <% end %>
+
+   <div id= <%= "book-description#{book.isbn}" %> class="modal">
+      <div class="modal-content">
+         <h4> <%= book.title %></h4>
+         <p> <%= book.description %> </p> <br>
+         <% if !book_already_in_shelf(book.isbn) && user_signed_in? %>
+            <%= form_tag books_path(book_isbn: book.isbn) do %>
+               <h6>Add to shelf:</h6>
+               <div class="row">
+                  <div class="input-field col m8 s12">
+                     <%= select_tag :shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
+                  </div>
+                  <div class="input-field col m4 s12">
+                     <%= submit_tag 'Agregar', :class => 'btn' %>
+                  </div>
+               </div>
+            <% end %>  
+         <% end %>
+      </div>
+   </div>
+
+<% end %>

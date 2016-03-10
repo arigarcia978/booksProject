@@ -1,3 +1,38 @@
 // Place all the styles related to the Books controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.collection-item {
+	padding-left: 20px !important;
+}
+.options-menu {
+	margin-bottom: 0px !important;
+	display: flex !important;
+}
+
+.options-icon {
+	margin-bottom: 0px !important;
+}
+
+.book-container {
+	height: 330px;
+
+	.book-information {
+		height: 300px !important;
+		width: 100% !important;
+		border-style: solid;
+	}
+
+	.book-actions {
+		border-style: dotted;
+		height: 30px;
+	}
+}
+
+span {
+	padding-bottom: 25px !important;
+}
+
+img {
+	width: 50%;
+}

@@ -4,10 +4,15 @@ class Book < ActiveRecord::Base
 
 	validates :isbn, presence: true, uniqueness: true
 
-	def updateRate(id, rate)
-		book = Book.find(id)
-		book.reviews_quantity += 1
-		book.rates_total += rate
-		book.save
+	def updateRate(id)
+		@book = Book.find(id)
+		@book.reviews_quantity = @book.reviewings.count
+		@book.rates_total = 0
+
+		@book.reviewings.each do |reviewing|
+			@book.rates_total += reviewing.rate
+		end
+		
+		@book.save
 	end
 end
