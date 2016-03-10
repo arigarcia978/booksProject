@@ -5,7 +5,8 @@ class BooksController < ApplicationController
   # GET /books
   # GET /books.json
   def index
-    @books = GoogleBooks.search(params[:search_key], {:count => 12})
+    user_ip = request.remote_ip # assuming user is accessing from a valid IP address
+    @books = GoogleBooks.search(params[:search_key], {:count => 12}, user_ip)
     if user_signed_in?
       @shelves = current_user.shelves
     end
