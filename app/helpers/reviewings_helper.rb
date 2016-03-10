@@ -22,7 +22,9 @@ module ReviewingsHelper
 		if !@book.nil?
 			return @book.title
 		else
-			@book = GoogleBooks.search(isbn: book_isbn).first
+			user_ip = request.remote_ip # assuming user is accessing from a valid IP address
+			@results = GoogleBooks.search(book_isbn, {}, user_ip)
+			@book = @results.first
 			return @book.title
 		end
 	end
