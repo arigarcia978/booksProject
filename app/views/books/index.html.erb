@@ -64,7 +64,9 @@
                      <%= select_tag :shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
                   </div>
                   <div class="input-field col m4 s12">
-                     <%= submit_tag 'Agregar', :class => 'btn' %>
+                     <button class = "btn" type = "submit">
+                        <i class="material-icons">done</i>
+                     </button>
                   </div>
                </div>
             <% end %>  
