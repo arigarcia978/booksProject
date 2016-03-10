@@ -17,4 +17,14 @@ module ReviewingsHelper
 		end
 	end
 
+	def get_book_reviewed(book_isbn)
+		@book = Book.where(isbn: book_isbn).first
+		if !@book.nil?
+			return @book.title
+		else
+			@book = GoogleBooks.search(isbn: book_isbn).first
+			return @book.title
+		end
+	end
+
 end

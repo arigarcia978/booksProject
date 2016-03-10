@@ -1,27 +1,31 @@
-<h1>Listing Shelves</h1>
+<p id = "notice"> <%= notice %> </p>
 
-<table>
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<div class="row valign-wrapper">
+   <div class="left col m6">
+      <h1>Shelves</h1>
+   </div>
+   <div class="col m6 valign">
+      <%= link_to '<i class="medium material-icons right">add</i>'.html_safe, new_shelf_path %>
+   </div>
+</div>
 
-  <tbody>
-    <% @shelves.each do |shelf| %>
-      <tr>
-        <td><%= shelf.user %></td>
-        <td><%= shelf.name %></td>
-        <td><%= link_to 'Show', shelf %></td>
-        <td><%= link_to 'Edit', edit_shelf_path(shelf) %></td>
-        <td><%= link_to 'Destroy', shelf, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<ul class="collapsible" data-collapsible="accordion">
+   <% @shelves.each do |shelf| %>
+      <li>
+         <div class="collapsible-header">
+            <div class="left">
+               <i class="material-icons">filter_drama</i><%= shelf.name %>
+            </div>
+            <div class="right">
+               <%= link_to '<i class="material-icons">edit</i>'.html_safe, edit_shelf_path(shelf) %>
+               <%= link_to '<i class="material-icons">delete</i>'.html_safe, shelf, method: :delete, data: { confirm: 'Are you sure?' } %>
+            </div>
+         </div>
+         <div class="collapsible-body"> <%= render shelf %> </div>
+       </li>
+   <% end %>
+</ul>
 
-<br>
-
-<%= link_to 'New Shelf', new_shelf_path %>
+<script type='text/javascript'>
+   notifiedByToast();
+</script>

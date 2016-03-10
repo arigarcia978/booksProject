@@ -1,0 +1,31 @@
+<div class="container">
+	<% if !shelf.books.empty? %>
+		<ul class="collection">
+			<% shelf.books.each do |book| %>
+				    <li class="collection-item avatar">
+				      	<img src= <%= "#{book.img_url}" %> alt="" class="circle">
+				      	<b><span class="title needs-padding"><%= book.title %></span></b>
+				      	<% if !get_shelves_to_move_to(shelf).empty? %>
+					      	<div class = "needs-padding input-field move_to_form">
+						      	<div class="row">
+						      		<%= form_tag move_book_shelf_book_path(shelf, book), method: "get" do |f| %>
+							        	<div class="col m8">
+							        		<%= select_tag :to_shelf_id, options_from_collection_for_select(get_shelves_to_move_to(shelf), "id", "name") %>
+							        	</div>
+							        	<div class="col m4">
+							        		<button type="submit" class="btn-flat">
+											    <i class="material-icons">trending_flat</i>
+											</button>
+										</div>
+									<% end %>
+								</div>
+					      	</div>
+				      	<% end %>
+				      	<%= link_to '<i class="material-icons">delete</i>'.html_safe, remove_book_shelf_book_path(shelf, book), :class => 'secondary-content' %>
+				    </li>
+		    <% end %>
+		</ul>
+	<% else %>
+		<p>No books added yet.</p>
+	<% end %>
+</div>

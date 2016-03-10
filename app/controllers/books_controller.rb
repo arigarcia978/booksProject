@@ -29,15 +29,15 @@ class BooksController < ApplicationController
   # POST /books
   # POST /books.json
   def create
+    @shelf.books << @book if !@shelf.books.include? @book
 
     respond_to do |format|
-      if @shelf.books.include? @book
+      if @shelf.user.reviewings.where(book_id: @book).empty?
         format.html { redirect_to new_book_reviewing_path(@book), notice: 'Already in shelf.'}
         format.json { render json: @book.errors, status: :unprocessable_entity }
       else
-        @shelf.books << @book
-        format.html { redirect_to new_book_reviewing_path(@book), notice: 'Book was successfully added to shelf.' }
-        format.json { render :show, status: :created, location: @book }
+        format.html { redirect_to books_path(search_key: params[:search_key]), notice: 'Book was successfully added to shelf.', search_key: params[:search_key] }
+        format.json { render :index, status: :created, location: @book }
       end
     end
   end
@@ -71,7 +71,8 @@ class BooksController < ApplicationController
     @shelf.books.delete(@book)
 
     respond_to do |format|
-      format.html { redirect_to @shelf, notice: 'Book was successfully removed from shelf.' }
+      format.html { redirect_to shelves_path, notice: 'Book was successfully removed from shelf.' }
+      format.json { render :index, status: :created, location: @shelf }
     end
   end
 
@@ -82,7 +83,7 @@ class BooksController < ApplicationController
     @new_shelf.books << @book
 
     respond_to do |format|
-      format.html { redirect_to @shelf, notice: 'Book was successfully removed from shelf.' }
+      format.html { redirect_to shelves_path, notice: 'Book was successfully removed from shelf.' }
       format.json { render :show, location: @shelf }
     end
   end
@@ -92,7 +93,11 @@ class BooksController < ApplicationController
     def set_book
       @book = Book.where(isbn: params[:book_isbn]).first
       if @book.nil?
-        @book = Book.new(isbn: params[:book_isbn])
+        @book = Book.new
+        @result = GoogleBooks.search(isbn: params[:book_isbn]).first
+        @book.isbn = @result.isbn
+        @book.title = @result.title
+        @book.img_url = @result.image_link
       end
     end
 

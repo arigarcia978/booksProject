@@ -3,7 +3,7 @@ class Book < ActiveRecord::Base
 	has_many :reviewings
 
 	validates :isbn, presence: true, uniqueness: true
-
+	validates :title, presence: true
 	def updateRate(id)
 		@book = Book.find(id)
 		@book.reviews_quantity = @book.reviewings.count
