@@ -100,7 +100,8 @@ class BooksController < ApplicationController
       @book = Book.where(isbn: params[:book_isbn]).first
       if @book.nil?
         @book = Book.new
-        @result = GoogleBooks.search(isbn: params[:book_isbn]).first
+        user_ip = request.remote_ip
+        @result = GoogleBooks.search(isbn: params[:book_isbn], {:count => 1}, user_ip)
         @book.isbn = @result.isbn
         @book.title = @result.title
         @book.image_link = @result.image_link
