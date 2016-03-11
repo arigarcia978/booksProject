@@ -107,6 +107,7 @@ class BooksController < ApplicationController
         @book.image_link = @result.image_link
         @book.published_date = @result.published_date
         @book.authors = @result.authors
+        @book.description = @result.description
       end
     end
 
