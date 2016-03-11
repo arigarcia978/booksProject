@@ -12,18 +12,30 @@
 </div>
 
 <% if @reviewings && !@reviewings.empty? %>
-   <table class="bordered responsive-table">
+   <table class="responsive-table striped centered">
+    <thead>
+        <tr>
+          <th>User</th>
+          <th>Rate</th>
+          <th>Review</th>
+          <th>Por si las dudas</th>
+        </tr>
+    </thead>
       <tbody>
          <% @reviewings.each do |reviewing| %>
             <tr>
-               <td><b> <%= reviewing.user.email %> </b><br>
-                   <i class = "center"> <%= reviewing.rate %> </i>
+               <td><b> <%= reviewing.user.email %> </b>
                </td>
+               <td><i class = "center"> <%= reviewing.rate %> </i></td>
                <td>
-                  <p> <%= reviewing.review %> </p>
+                  <% if reviewing.review.empty? %>
+                    <p> - </p>
+                  <% else %>
+                    <p> <%= reviewing.review %> </p>
+                  <% end %>
                </td>
                <% if review_by_user(reviewing.id) %>
-                  <td><%= link_to '<i class="material-icons">edit</i>'.html_safe, edit_reviewing_path(reviewing, book_id: reviewing.book.id) %> <br>
+                  <td><%= link_to '<i class="material-icons">edit</i>'.html_safe, edit_reviewing_path(reviewing, book_id: reviewing.book.id) %>
                   <%= link_to '<i class="material-icons">delete</i>'.html_safe, reviewing, method: :delete, data: { confirm: 'Are you sure?' } %></td>
                <% end %>
              </tr>

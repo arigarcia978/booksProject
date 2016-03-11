@@ -1,92 +1,80 @@
 <p class="notice" id = "notice"><% notice %></p>
 
-<% @count = 0 %>
-
 <% if !@books.nil? %>
    
    <% if @books.empty? %>
       <p> No books saved yet. </p>
    <% else %>
-      <h4> Search results: <%= params[:search_key] %> </h4>
+      <div class="row">
+         <% @books.each do |book| %>
 
-      <% @books.each do |book| %>
+            <div class="col s6 m4">
+               <div class="card small">
 
-         <% @count = 0 if @count == 3 %>
+                  <div class="card-image">
+                     <img src= <%= book.image_link %>>
+                     <span class="card-title"><%= truncate(book.title, length: 50) %></span>
+                  </div>
 
-         <% if @count == 0 %>
-            <div class="row">
-         <% end %>
+                  <div class="card-content">
+                     <p> <%= book.isbn %> </p>
+                     <p> <%= book.authors %> </p>
+                  </div>
 
-         <div class="col m4">
-            <div class="card small">
-
-               <div class="card-image">
-                  <img src= <%= book.image_link %>>
-                  <span class="card-title"><%= truncate(book.title, length: 50) %></span>
-               </div>
-
-               <div class="card-content">
-                  <p> <%= book.authors %> </p>
-               </div>
-
-               <div class="card-action">
-                  <% if book_already_in_shelf(book.isbn) || !user_signed_in? %>
-                     <div class="options-icon col m6 center">
-                  <% else %>
-                     <div class="options-icon col m4 center">
-                        <%= link_to '<i class="material-icons">library_add</i>'.html_safe, books_path(book_isbn: book.isbn, search_key: params[:search_key]), method: :post, :class => 'waves-effect waves-teal' %>
-                     </div>
-                     <div class="options-icon col m4 center">
-                  <% end %>
-                        <%= link_to '<i class="material-icons">chat_bubble</i>'.html_safe, book_reviewings_path(book.isbn), :class => 'waves-effect waves-teal' %>
-                     </div>
-
-                  <% if book_already_in_shelf(book.isbn) %>
-                     <div class="options-icon col m6 center">
-                  <% else %>
-                     <div class="options-icon col m4 center">
-                  <% end %>
-
-                        <a class='waves-effect waves-teal modal-trigger' href= <%="#book-description#{book.isbn}" %> data-activates=''>
-                           <i class="material-icons">add</i>
-                        </a>
-                     </div>
-               </div>
-            </div>
-         </div>
-
-         <% @count += 1 %>
-
-         <% if @count == 3 %>
-            </div>
-         <% end %>
-
-         <div id= <%= "book-description#{book.isbn}" %> class="modal">
-            <div class="modal-content">
-               <h4> <%= book.title %></h4>
-               <p><i>Publicado <%= book.published_date %></i></p>
-               <p>Rate: <%= get_book_rate(book.isbn) %></p>
-               <p> <%= book.description %> </p> <br>
-
-               <% if !book_already_in_shelf(book.isbn) && user_signed_in? %>
-                  <%= form_tag books_path(book_isbn: book.isbn, search_key: params[:search_key]) do %>
-                     <h6>Add to shelf:</h6>
-                     <div class="row">
-                        <div class="input-field col m8 s12">
-                           <%= select_tag :shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
+                  <div class="card-action">
+                     <% if book_already_in_shelf(book.isbn) || !user_signed_in? %>
+                        <div class="options-icon col s6 m6 center">
+                     <% else %>
+                        <div class="options-icon col s4 m4 center">
+                           <%= link_to '<i class="material-icons">library_add</i>'.html_safe, books_path(book_isbn: book.isbn, search_key: params[:search_key]), method: :post, :class => 'waves-effect waves-teal' %>
                         </div>
-                        <div class="input-field col m4 s12">
-                           <button class = "btn" type = "submit">
-                              <i class="material-icons">done</i>
-                           </button>
+                        <div class="options-icon col s4 m4 center">
+                     <% end %>
+                           <%= link_to '<i class="material-icons">chat_bubble</i>'.html_safe, book_reviewings_path(book.isbn), :class => 'waves-effect waves-teal' %>
                         </div>
-                     </div>
-                  <% end %>  
-               <% end %>
 
+                     <% if book_already_in_shelf(book.isbn) %>
+                        <div class="options-icon col s6 m6 center">
+                     <% else %>
+                        <div class="options-icon col s4 m4 center">
+                     <% end %>
+
+                           <a class='waves-effect waves-teal modal-trigger' href= <%="#book-description#{book.isbn}" %> data-activates=''>
+                              <i class="material-icons">add</i>
+                           </a>
+                        </div>
+                  </div>
+               </div>
             </div>
-         </div>
-      <% end %>
+
+            <div id= <%= "book-description#{book.isbn}" %> class="modal">
+               <div class="modal-content">
+                  <h4> <%= book.title %></h4>
+                  <p><i>Publicado <%= book.published_date %></i></p>
+                  <p>Rate: <%= get_book_rate(book.isbn) %></p>
+                  <p> <%= book.description %> </p> <br>
+
+                  <% if !book_already_in_shelf(book.isbn) && user_signed_in? %>
+                     <%= form_tag books_path(book_isbn: book.isbn, search_key: params[:search_key]) do %>
+                        <h6>Add to shelf:</h6>
+                        <div class="row">
+                           <div class="input-field col m8 s12">
+                              <%= select_tag :shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
+                           </div>
+                           <div class="input-field col m4 s12">
+                              <button class = "btn" type = "submit">
+                                 <i class="material-icons">done</i>
+                              </button>
+                           </div>
+                        </div>
+                     <% end %>  
+                  <% end %>
+
+               </div>
+            </div>
+
+         <% end %>
+      </div>
    <% end %>
 
 <% else %>

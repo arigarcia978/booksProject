@@ -3,7 +3,6 @@
 	<head>
 	  <title>ProyectoLibros</title>
 	  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-	  <%= stylesheet_link_tag "material" %>
 	  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 	  <%= csrf_meta_tags %>
 	</head>
@@ -12,7 +11,7 @@
 			<nav>
 				<div class="nav-wrapper">
 					<div class="row">
-						<div class="left col s8 m7">
+						<div class="left col s10 m10 l7">
 							<%= form_tag books_path, :method => 'get' do %>
 								<div class="input-field">
 									<%= text_field_tag :search_key, params[:search_key], type: 'search' %>
@@ -20,26 +19,31 @@
 								</div>
 							<% end %>
 						</div>
-						<div class="col s4 m5">
-							<p class = "right">
-								<ul id="nav-mobile" class="right valign-wrapper">
-									<% if user_signed_in? %>
-										<li class = "valign"> <%= link_to 'My Books', books_path, :class => 'nav-option' %></li>
-										<li class = "valign"> <%= link_to 'Shelves', shelves_path, :class => 'nav-option' %></li>
-									<% end %>
-							      	<li class = " valign">
-							      		<a class="dropdown-button nav-option" href="#!" data-activates="dropdown1"><%= get_dropdown_title %><i class="material-icons right">arrow_drop_down</i></a>
-							      	</li>
-							    </ul>
-							</p>
+						<div class="col s2 m2 l5 right">
+							<a href="#" data-activates="mobile-demo" class="button-collapse right"><i class="material-icons">menu</i></a>
+							<ul id="nav-mobile" class="right valign-wrapper hide-on-med-and-down">
+								<% if user_signed_in? %>
+									<li class = "valign"> <%= link_to 'My Books', books_path, :class => 'nav-option' %></li>
+									<li class = "valign"> <%= link_to 'Shelves', shelves_path, :class => 'nav-option' %></li>
+									<li class = "valign"> <%= link_to 'Cerrar sesión', destroy_user_session_path, method: :delete, :class => 'nav-option' %> </li>
+								<% else %>
+									<li class = "valign"> <%= link_to 'Iniciar sesión', new_user_session_path, :class => 'nav-option' %> </li>
+								<% end %>
+						    </ul>
+							<ul class="side-nav" id="mobile-demo">
+								<% if user_signed_in? %>
+						        	<li> <%= link_to 'My Books', books_path, :class => 'nav-option' %></li>
+						        	<li> <%= link_to 'Shelves', shelves_path, :class => 'nav-option' %></li>
+						        	<li> <%= link_to 'Cerrar sesión', destroy_user_session_path, method: :delete %> </li>
+						        <% else %>
+						        	<li> <%= link_to 'Iniciar sesión', new_user_session_path %> </li>
+						        <% end %>
+						    </ul>
 						</div>
 					</div>
 				</div>
 			</nav>
 		</div>
-		<ul id="dropdown1" class="dropdown-content">
-			<li> <%= get_options_for_dropdown %> </li>
-		</ul>
 
 		<div class="container">
 			<p class="notice" id = "notice"><% notice %></p>

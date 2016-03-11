@@ -5,10 +5,10 @@ class BooksController < ApplicationController
   # GET /books
   # GET /books.json
   def index
-    if !params[:search_key].blank?
+    if !params[:search_key].nil?
       user_ip = request.remote_ip # assuming user is accessing from a valid IP address
-      @books_result = GoogleBooks.search(params[:search_key], {:count => 12}, user_ip)
-      @books = @books_result.reject {|book| book.isbn.nil? || book.image_link.blank? }
+      @books_result = GoogleBooks.search(params[:search_key], {:count => 36}, user_ip)
+      @books = @books_result.reject {|book| book.isbn.blank? || book.image_link.blank? }
     else
       @books = current_user.books if user_signed_in?
     end
@@ -101,7 +101,7 @@ class BooksController < ApplicationController
       if @book.nil?
         @book = Book.new
         user_ip = request.remote_ip
-        @result = GoogleBooks.search(params[:book_isbn], {:count => 1}, user_ip).first
+        @result = GoogleBooks.search("ISBN:#{params[:book_isbn]}", {}, user_ip).first
         @book.isbn = @result.isbn
         @book.title = @result.title
         @book.image_link = @result.image_link
