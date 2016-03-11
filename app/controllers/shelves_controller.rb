@@ -36,7 +36,7 @@ class ShelvesController < ApplicationController
     respond_to do |format|
       if @shelf.save
         format.html { redirect_to shelves_path, notice: 'Shelf was successfully created.' }
-        format.json { render :show, status: :created, location: @shelf }
+        format.json { render :index, status: :created, location: @shelf }
       else
         format.html { render :new }
         format.json { render json: @shelf.errors, status: :unprocessable_entity }
