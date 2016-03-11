@@ -20,7 +20,10 @@ ActiveRecord::Schema.define(version: 20160310140645) do
     t.integer  "reviews_quantity", default: 0
     t.integer  "rates_total",      default: 0
     t.string   "title"
-    t.string   "img_url"
+    t.string   "image_link"
+    t.string   "published_date"
+    t.string   "authors"
+    t.string   "description"
   end
 
   create_table "books_shelves", force: :cascade do |t|

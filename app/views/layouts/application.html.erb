@@ -12,7 +12,7 @@
 			<nav>
 				<div class="nav-wrapper">
 					<div class="row">
-						<div class="left col s8 m8">
+						<div class="left col s8 m7">
 							<%= form_tag books_path, :method => 'get' do %>
 								<div class="input-field">
 									<%= text_field_tag :search_key, params[:search_key], type: 'search' %>
@@ -20,10 +20,11 @@
 								</div>
 							<% end %>
 						</div>
-						<div class="col s4 m4">
+						<div class="col s4 m5">
 							<p class = "right">
 								<ul id="nav-mobile" class="right valign-wrapper">
 									<% if user_signed_in? %>
+										<li class = "valign"> <%= link_to 'My Books', books_path, :class => 'nav-option' %></li>
 										<li class = "valign"> <%= link_to 'Shelves', shelves_path, :class => 'nav-option' %></li>
 									<% end %>
 							      	<li class = " valign">

@@ -1,77 +1,94 @@
 <p class="notice" id = "notice"><% notice %></p>
 
-<h4> Search results: <%= params[:search_key] %> </h4>
-
 <% @count = 0 %>
-<% @books.each do |book| %>
 
-   <% @count = 0 if @count == 4 %>
+<% if !@books.nil? %>
+   
+   <% if @books.empty? %>
+      <p> No books saved yet. </p>
+   <% else %>
+      <h4> Search results: <%= params[:search_key] %> </h4>
 
-   <% if @count == 0 %>
-      <div class="row">
-   <% end %>
+      <% @books.each do |book| %>
 
-   <div class="col s12 m3 book-container">
-      <div class="book-information valign-wrapper">
-         <div class="contenido valign center">
-            <span class="title"><b><%= book.title %></b></span> <br>
-            <img src= <%= book.image_link %> alt="" class = "center">
-            <p><i> <%= book.authors %> </i></p>
-            <p>Rate: <%= get_book_rate(book.isbn) %></p>
-         </div>
-      </div>
-      <div class="book-actions">
-         <% if book_already_in_shelf(book.isbn) || !user_signed_in? %>
-            <div class="options-icon col m6 center">
-         <% else %>
-            <div class="options-icon col m4 center">
-               <%= link_to '<i class="material-icons">library_add</i>'.html_safe, books_path(book_isbn: book.isbn, search_key: params[:search_key]), method: :post, :class => 'waves-effect waves-teal' %>
-            </div>
-            <div class="options-icon col m4 center">
+         <% @count = 0 if @count == 3 %>
+
+         <% if @count == 0 %>
+            <div class="row">
          <% end %>
-            <%= link_to '<i class="material-icons">chat_bubble</i>'.html_safe, book_reviewings_path(book.isbn), :class => 'waves-effect waves-teal' %>
-         </div>
-         <% if book_already_in_shelf(book.isbn) %>
-            <div class="options-icon col m6 center">
-         <% else %>
-            <div class="options-icon col m4 center">
-         <% end %>
-            <a class='waves-effect waves-teal modal-trigger' href= <%="#book-description#{book.isbn}" %> data-activates=''>
-               <i class="material-icons">add</i>
-            </a>
-         </div>
-      </div>
-   </div>
 
-   <% @count += 1 %>
+         <div class="col m4">
+            <div class="card small">
 
-   <% if @count == 4 %>
-      </div>
-   <% end %>
-
-   <div id= <%= "book-description#{book.isbn}" %> class="modal">
-      <div class="modal-content">
-         <h4> <%= book.title %></h4>
-         <p> <%= book.description %> </p> <br>
-         <% if !book_already_in_shelf(book.isbn) && user_signed_in? %>
-            <%= form_tag books_path(book_isbn: book.isbn, search_key: params[:search_key]) do %>
-               <%= hidden_field_tag :book_isbn, book.isbn %>
-               <%= hidden_field_tag :book_title, book.title %>
-               <%= hidden_field_tag :book_img_url, book.image_link %>
-               <h6>Add to shelf:</h6>
-               <div class="row">
-                  <div class="input-field col m8 s12">
-                     <%= select_tag :shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
-                  </div>
-                  <div class="input-field col m4 s12">
-                     <button class = "btn" type = "submit">
-                        <i class="material-icons">done</i>
-                     </button>
-                  </div>
+               <div class="card-image">
+                  <img src= <%= book.image_link %>>
+                  <span class="card-title"><%= truncate(book.title, length: 50) %></span>
                </div>
-            <% end %>  
-         <% end %>
-      </div>
-   </div>
 
-<% end %>s
+               <div class="card-content">
+                  <p> <%= book.authors %> </p>
+               </div>
+
+               <div class="card-action">
+                  <% if book_already_in_shelf(book.isbn) || !user_signed_in? %>
+                     <div class="options-icon col m6 center">
+                  <% else %>
+                     <div class="options-icon col m4 center">
+                        <%= link_to '<i class="material-icons">library_add</i>'.html_safe, books_path(book_isbn: book.isbn, search_key: params[:search_key]), method: :post, :class => 'waves-effect waves-teal' %>
+                     </div>
+                     <div class="options-icon col m4 center">
+                  <% end %>
+                        <%= link_to '<i class="material-icons">chat_bubble</i>'.html_safe, book_reviewings_path(book.isbn), :class => 'waves-effect waves-teal' %>
+                     </div>
+
+                  <% if book_already_in_shelf(book.isbn) %>
+                     <div class="options-icon col m6 center">
+                  <% else %>
+                     <div class="options-icon col m4 center">
+                  <% end %>
+
+                        <a class='waves-effect waves-teal modal-trigger' href= <%="#book-description#{book.isbn}" %> data-activates=''>
+                           <i class="material-icons">add</i>
+                        </a>
+                     </div>
+               </div>
+            </div>
+         </div>
+
+         <% @count += 1 %>
+
+         <% if @count == 3 %>
+            </div>
+         <% end %>
+
+         <div id= <%= "book-description#{book.isbn}" %> class="modal">
+            <div class="modal-content">
+               <h4> <%= book.title %></h4>
+               <p><i>Publicado <%= book.published_date %></i></p>
+               <p>Rate: <%= get_book_rate(book.isbn) %></p>
+               <p> <%= book.description %> </p> <br>
+
+               <% if !book_already_in_shelf(book.isbn) && user_signed_in? %>
+                  <%= form_tag books_path(book_isbn: book.isbn, search_key: params[:search_key]) do %>
+                     <h6>Add to shelf:</h6>
+                     <div class="row">
+                        <div class="input-field col m8 s12">
+                           <%= select_tag :shelf_id, options_from_collection_for_select(@shelves, "id", "name") %>
+                        </div>
+                        <div class="input-field col m4 s12">
+                           <button class = "btn" type = "submit">
+                              <i class="material-icons">done</i>
+                           </button>
+                        </div>
+                     </div>
+                  <% end %>  
+               <% end %>
+
+            </div>
+         </div>
+      <% end %>
+   <% end %>
+
+<% else %>
+   <h4> Bienvenido? </h4>
+<% end %>

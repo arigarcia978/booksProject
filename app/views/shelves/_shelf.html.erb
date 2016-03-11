@@ -3,7 +3,7 @@
 		<ul class="collection">
 			<% shelf.books.each do |book| %>
 				    <li class="collection-item avatar">
-				      	<img src= <%= "#{book.img_url}" %> alt="" class="circle">
+				      	<img src= <%= "#{book.image_link}" %> alt="" class="circle">
 				      	<b><span class="title needs-padding"><%= book.title %></span></b>
 				      	<% if !get_shelves_to_move_to(shelf).empty? %>
 					      	<div class = "needs-padding input-field move_to_form">
